@@ -51,7 +51,6 @@ rb_win_certstore_loader_initialize(VALUE self, VALUE store_name, VALUE use_enter
   DWORD len;
   DWORD errCode;
   CHAR buffer[1024];
-  TCHAR errBuffer[1132];
   DWORD ret;
 
   Check_Type(store_name, T_STRING);
@@ -83,11 +82,10 @@ rb_win_certstore_loader_initialize(VALUE self, VALUE store_name, VALUE use_enter
                          sizeof(buffer)/sizeof(buffer[0]),
                          NULL);
     if (ret) {
-      _snprintf_s(errBuffer, 1024, _TRUNCATE,
-                  "cannot access specified logical store. Perhaps you should do as an administrator. ErrorCode: %d, Message: %s",
-                  errCode,
-                  buffer);
-      rb_raise(rb_eCertLoaderError, errBuffer);
+      rb_raise(rb_eCertLoaderError,
+               "cannot access specified logical store. Perhaps you should do as an administrator. ErrorCode: %d, Message: %s",
+               errCode,
+               buffer);
     }
   }
   default: {
@@ -208,7 +206,6 @@ rb_win_certstore_loader_find_certificate(VALUE self, VALUE rb_thumbprint)
   PCCERT_CONTEXT pContext = NULL;
   struct CertstoreLoader *loader;
   DWORD len;
-  CHAR errBuf[256];
 
   Check_Type(rb_thumbprint, T_STRING);
 
@@ -248,8 +245,9 @@ error:
 
   CertFreeCertificateContext(pContext);
 
-  _snprintf_s(errBuf, 256, _TRUNCATE, "Cannot find certificates with thumbprint(%S)", winThumbprint);
-  rb_raise(rb_eCertLoaderError, errBuf);
+  rb_raise(rb_eCertLoaderError,
+           "Cannot find certificates with thumbprint(%S)",
+           winThumbprint);
 }
 
 static VALUE
@@ -296,7 +294,6 @@ rb_win_certstore_loader_delete_certificate(VALUE self, VALUE rb_thumbprint)
   PCCERT_CONTEXT pContext = NULL;
   struct CertstoreLoader *loader;
   DWORD len;
-  CHAR errBuf[256];
 
   Check_Type(rb_thumbprint, T_STRING);
 
@@ -339,8 +336,9 @@ error:
 
   CertFreeCertificateContext(pContext);
 
-  _snprintf_s(errBuf, 256, _TRUNCATE, "Cannot find certificates with thumbprint(%S)", winThumbprint);
-  rb_raise(rb_eCertLoaderError, errBuf);
+  rb_raise(rb_eCertLoaderError,
+           "Cannot find certificates with thumbprint(%S)",
+           winThumbprint);
 }
 
 static VALUE
