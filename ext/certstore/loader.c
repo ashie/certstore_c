@@ -249,8 +249,6 @@ rb_win_certstore_loader_find_certificate(VALUE self, VALUE rb_thumbprint)
 
 error:
 
-  CertFreeCertificateContext(pContext);
-
   rb_raise(rb_eCertLoaderError,
            "Cannot find certificates with thumbprint(%S)",
            winThumbprint);
@@ -339,8 +337,6 @@ rb_win_certstore_loader_delete_certificate(VALUE self, VALUE rb_thumbprint)
     return Qfalse;
 
 error:
-
-  CertFreeCertificateContext(pContext);
 
   rb_raise(rb_eCertLoaderError,
            "Cannot find certificates with thumbprint(%S)",
