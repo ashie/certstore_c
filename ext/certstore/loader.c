@@ -127,8 +127,9 @@ certificate_context_to_string(PCCERT_CONTEXT pContext)
 
   utf8str = wstr_to_mbstr(CP_UTF8, wszString, -1);
   // malloc sizeof CHAR * ((base64 cert content + header + footer) length).
-  certificate = malloc(sizeof(CHAR) * (strlen(utf8str) + strlen(certHeader) + strlen(certFooter)));
-  sprintf(certificate, "%s%s%s", certHeader, utf8str, certFooter);
+  len = strlen(utf8str) + strlen(certHeader) + strlen(certFooter);
+  certificate = malloc(len + 1);
+  _snprintf_s(certificate, len + 1, len, "%s%s%s", certHeader, utf8str, certFooter);
 
   errCode = GetLastError();
   if (ERROR_SUCCESS != errCode && CRYPT_E_NOT_FOUND != errCode) {
